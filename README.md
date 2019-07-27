@@ -28,8 +28,8 @@ otherwise add that as well.
 
     gcc -m32 -mincoming-stack-boundary=2 -shared -o stack-fix.{so,c} -ldl -lX11 -lGL
 
-To use, just add stack-fix.so to the LD_PRELOAD environment variable,
-using the full path if not in your LD_LIBRARY_PATH.
+To use, just add stack-fix.so to the `LD_PRELOAD` environment variable,
+using the full path if not in your `LD_LIBRARY_PATH`.
 
 This cures the mysterious crashing on the Eschalon game series.  It
 may cure others, as well, if you add enough prototypes.
