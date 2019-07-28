@@ -9,27 +9,30 @@ the code.  I have done this for the game Eschalon Book I in
 `stack-fix.c`: at first I added functions that were crashing, but when
 gdb was no longer able to identify these (due to missing unwind
 information), I went ahead and added all symbols in glx or GL directly
-referred to by the binary. This also includes glXGetProcAddressARB,
+referred to by the binary.  This also includes glXGetProcAddressARB,
 which I treat differently in order to find out what addresses are
 being queried and adding them manually (in this case, only one
 function).
 
-To generate the code, run sed:
+To generate the code, run sed (you will end up with a mostly
+empty/non-functional binary otherwise):
 
     sed -i -f addldovr.sed stack-fix.c
 
-To clean the source for further editing, run sed:
-
-    sed -i -f delldovr.sed stack-fix.c
-
 To compile, make sure and set the stack alignment option.  The
-following assumes that `-mpreferred-stack-boundary=4` is the default;
-otherwise add that as well.
+following assumes that `-mpreferred-stack-boundary=4` is the default
+(that's the cause of this issue in the first place, so it's pretty
+likely); otherwise add that as well.
 
     gcc -m32 -mincoming-stack-boundary=2 -shared -o stack-fix.{so,c} -ldl -lX11 -lGL
+
+To clean the source for further editing and/or git activity, run sed:
+
+    sed -i -f delldovr.sed stack-fix.c
 
 To use, just add stack-fix.so to the `LD_PRELOAD` environment variable,
 using the full path if not in your `LD_LIBRARY_PATH`.
 
-This cures the mysterious crashing on the Eschalon game series.  It
-may cure others, as well, if you add enough prototypes.
+This cures the mysterious crashing on the Eschalon game series.  Books
+II and III don't use any additional GL functions, and they haven't
+crashed so far.  It may cure others, as well, if you add enough prototypes.
